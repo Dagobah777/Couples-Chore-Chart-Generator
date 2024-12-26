@@ -3,29 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chore Chart Generator</title>
+    <title>Daily Chore Distributor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
             padding: 0;
-            text-align: center;
+            background: linear-gradient(to bottom right, #74ebd5, #9face6);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 80%;
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+        .container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        th {
-            background-color: #f4f4f4;
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
         }
 
         button {
@@ -35,43 +52,64 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
 
-        input {
-            margin: 10px;
-            padding: 5px;
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade {
+            animation: fadeIn 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <h1>Weekly Chore Chart Generator</h1>
-    <p>Enter the names and chores, then generate a random weekly chart!</p>
-
-    <div>
+    <h1>Daily Chore Distributor</h1>
+    <div class="container">
         <input type="text" id="person1" placeholder="Enter first name">
         <input type="text" id="person2" placeholder="Enter second name">
-        <input type="text" id="chores" placeholder="Enter chores (comma-separated)">
-        <button onclick="generateChoreChart()">Generate Chart</button>
+        <input type="text" id="chores" placeholder="Enter today's chores (comma-separated)">
+        <button onclick="generateDailyChoreChart()">Distribute Chores</button>
+
+        <table id="choreChart">
+            <thead>
+                <tr>
+                    <th>Chore</th>
+                    <th>Assigned To</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <table id="choreChart">
-        <thead>
-            <tr>
-                <th>Day</th>
-                <th>Chore</th>
-                <th>Assigned To</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
     <script>
-        function generateChoreChart() {
-            const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        function generateDailyChoreChart() {
             const person1 = document.getElementById("person1").value.trim();
             const person2 = document.getElementById("person2").value.trim();
             const choresInput = document.getElementById("chores").value.trim();
@@ -89,15 +127,12 @@
             const shuffledChores = chores.sort(() => Math.random() - 0.5);
             const assignees = [person1, person2];
 
-            days.forEach((day, index) => {
+            shuffledChores.forEach((chore, index) => {
                 const row = document.createElement("tr");
-
-                const dayCell = document.createElement("td");
-                dayCell.textContent = day;
-                row.appendChild(dayCell);
+                row.classList.add("fade");
 
                 const choreCell = document.createElement("td");
-                choreCell.textContent = shuffledChores[index % shuffledChores.length];
+                choreCell.textContent = chore;
                 row.appendChild(choreCell);
 
                 const assignedToCell = document.createElement("td");
