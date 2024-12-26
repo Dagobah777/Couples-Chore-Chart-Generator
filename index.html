@@ -34,12 +34,14 @@
             width: 90%;
             backdrop-filter: blur(10px);
             animation: fadeIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         input {
-            margin: 10px 0;
             padding: 15px;
-            width: 100%;
+            width: calc(100% - 30px);
             border: none;
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.2);
@@ -109,9 +111,15 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <button onclick="saveChart()">Save Chart</button>
+        <h3>Saved Charts</h3>
+        <ul id="savedCharts"></ul>
     </div>
 
     <script>
+        const savedCharts = [];
+
         function generateDailyChoreChart() {
             const person1 = document.getElementById("person1").value.trim();
             const person2 = document.getElementById("person2").value.trim();
@@ -144,6 +152,31 @@
 
                 tableBody.appendChild(row);
             });
+        }
+
+        function saveChart() {
+            const table = document.querySelector("#choreChart");
+            const tableHTML = table.outerHTML;
+            const date = new Date().toLocaleDateString();
+            savedCharts.push({ date, tableHTML });
+            updateSavedCharts();
+        }
+
+        function updateSavedCharts() {
+            const savedChartsList = document.getElementById("savedCharts");
+            savedChartsList.innerHTML = "";
+
+            savedCharts.forEach((chart, index) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<button onclick="viewChart(${index})">View Chart from ${chart.date}</button>`;
+                savedChartsList.appendChild(listItem);
+            });
+        }
+
+        function viewChart(index) {
+            const chart = savedCharts[index];
+            const newWindow = window.open("", "_blank");
+            newWindow.document.write(chart.tableHTML);
         }
     </script>
 </body>
