@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chore Chart Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            text-align: center;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input {
+            margin: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weekly Chore Chart Generator</h1>
+    <p>Enter the names and chores, then generate a random weekly chart!</p>
+
+    <div>
+        <input type="text" id="person1" placeholder="Enter first name">
+        <input type="text" id="person2" placeholder="Enter second name">
+        <input type="text" id="chores" placeholder="Enter chores (comma-separated)">
+        <button onclick="generateChoreChart()">Generate Chart</button>
+    </div>
+
+    <table id="choreChart">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Chore</th>
+                <th>Assigned To</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        function generateChoreChart() {
+            const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+            const person1 = document.getElementById("person1").value.trim();
+            const person2 = document.getElementById("person2").value.trim();
+            const choresInput = document.getElementById("chores").value.trim();
+            const chores = choresInput.split(",").map(chore => chore.trim());
+
+            if (!person1 || !person2 || chores.length === 0 || chores[0] === "") {
+                alert("Please fill in all fields correctly.");
+                return;
+            }
+
+            const tableBody = document.querySelector("#choreChart tbody");
+            tableBody.innerHTML = ""; // Clear previous table content
+
+            // Shuffle chores randomly
+            const shuffledChores = chores.sort(() => Math.random() - 0.5);
+            const assignees = [person1, person2];
+
+            days.forEach((day, index) => {
+                const row = document.createElement("tr");
+
+                const dayCell = document.createElement("td");
+                dayCell.textContent = day;
+                row.appendChild(dayCell);
+
+                const choreCell = document.createElement("td");
+                choreCell.textContent = shuffledChores[index % shuffledChores.length];
+                row.appendChild(choreCell);
+
+                const assignedToCell = document.createElement("td");
+                assignedToCell.textContent = assignees[index % 2]; // Alternate between person1 and person2
+                row.appendChild(assignedToCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
